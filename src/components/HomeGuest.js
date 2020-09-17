@@ -1,8 +1,22 @@
 import React from "react";
+import Axios from "axios";
 
 import Page from "./Page";
 
 function HomeGuest() {
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      await Axios.post("http://localhost:8080/register", {
+        username: "test2",
+        email: "test@test2.com",
+        password: "qaqaqaqaqaqa",
+      });
+      console.log("User was successfuly created");
+    } catch (e) {
+      console.log("There was an error");
+    }
+  }
   return (
     <Page wide title="Welcome">
       <div className="row align-items-center">
@@ -16,7 +30,7 @@ function HomeGuest() {
           </p>
         </div>
         <div className="col-lg-5 pl-lg-5 pb-3 py-lg-5">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="username-register" className="text-muted mb-1">
                 <small>Username</small>
