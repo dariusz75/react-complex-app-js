@@ -1,5 +1,6 @@
-06-logging-form 
+08-conditional-homepage
 
+- App.js
 - Header.js
 - HeaderLoggedOut.js
 - HeaderLoggedIn.js
