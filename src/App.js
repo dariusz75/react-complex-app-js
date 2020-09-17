@@ -9,6 +9,7 @@ import Home from "./components/Home";
 import Footer from "./components/Footer";
 import About from "./components/About";
 import Terms from "./components/Terms";
+import CreatePost from "./components/CreatePost";
 
 function App() {
   const appToken = localStorage.getItem("appToken");
@@ -25,6 +26,9 @@ function App() {
         </Route>
         <Route path="/terms" exact>
           <Terms />
+        </Route>
+        <Route path="/create-post" exact>
+          <CreatePost />
         </Route>
       </Switch>
 

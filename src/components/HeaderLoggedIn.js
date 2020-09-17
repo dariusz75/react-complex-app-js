@@ -18,13 +18,14 @@ function HeaderLoggedIn(props) {
       </span>
       <Link to="#" className="mr-2">
         <img
+          alt="avatar"
           className="small-header-avatar"
           src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
         />
       </Link>
-      <a className="btn btn-sm btn-success mr-2" href="/create-post">
+      <Link className="btn btn-sm btn-success mr-2" to="/create-post">
         Create Post
-      </a>
+      </Link>
       <button className="btn btn-sm btn-secondary" onClick={handleLoggedOut}>
         Sign Out
       </button>

@@ -1,6 +1,4 @@
-08-conditional-homepage
+10-create-post
 
 - App.js
-- Header.js
-- HeaderLoggedOut.js
-- HeaderLoggedIn.js
+- CreatePost.js
