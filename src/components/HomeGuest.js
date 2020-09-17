@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import Axios from "axios";
 
 import Page from "./Page";
 
 function HomeGuest() {
+  const [userName, setUserName] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const handleSetUsername = (e) => {
+    setUserName(e.target.value);
+  };
+
+  const handleSetEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleSetPassword = (e) => {
+    setPassword(e.target.value);
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       await Axios.post("http://localhost:8080/register", {
-        username: "test2",
-        email: "test@test2.com",
-        password: "qaqaqaqaqaqa",
+        username: userName,
+        email: email,
+        password: password,
       });
       console.log("User was successfuly created");
     } catch (e) {
@@ -42,6 +58,7 @@ function HomeGuest() {
                 type="text"
                 placeholder="Pick a username"
                 autoComplete="off"
+                onChange={handleSetUsername}
               />
             </div>
             <div className="form-group">
@@ -55,6 +72,7 @@ function HomeGuest() {
                 type="text"
                 placeholder="you@example.com"
                 autoComplete="off"
+                onChange={handleSetEmail}
               />
             </div>
             <div className="form-group">
@@ -67,6 +85,7 @@ function HomeGuest() {
                 className="form-control"
                 type="password"
                 placeholder="Create a password"
+                onChange={handleSetPassword}
               />
             </div>
             <button
