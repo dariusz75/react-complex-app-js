@@ -4,12 +4,12 @@ import Axios from "axios";
 import Page from "./Page";
 
 function HomeGuest() {
-  const [userName, setUserName] = useState();
+  const [username, setUsername] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const handleSetUsername = (e) => {
-    setUserName(e.target.value);
+    setUsername(e.target.value);
   };
 
   const handleSetEmail = (e) => {
@@ -24,7 +24,7 @@ function HomeGuest() {
     e.preventDefault();
     try {
       await Axios.post("http://localhost:8080/register", {
-        username: userName,
+        username: username,
         email: email,
         password: password,
       });
