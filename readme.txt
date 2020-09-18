@@ -1,4 +1,5 @@
-10-create-post
+11-redirecting-to-created-post
 
 - App.js
 - CreatePost.js
+- ViewSinglePost.js

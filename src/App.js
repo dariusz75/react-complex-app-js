@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import About from "./components/About";
 import Terms from "./components/Terms";
 import CreatePost from "./components/CreatePost";
+import ViewSinglePost from "./components/ViewSinglePost";
 
 function App() {
   const appToken = localStorage.getItem("appToken");
@@ -29,6 +30,9 @@ function App() {
         </Route>
         <Route path="/create-post" exact>
           <CreatePost />
+        </Route>
+        <Route path="/post/:id" exact>
+          <ViewSinglePost />
         </Route>
       </Switch>
 
