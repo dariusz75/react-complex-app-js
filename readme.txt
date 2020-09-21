@@ -1,5 +1,5 @@
-11-redirecting-to-created-post
+12-flash-messages
 
+- FlashMessages.js
 - App.js
 - CreatePost.js
-- ViewSinglePost.js

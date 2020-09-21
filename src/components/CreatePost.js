@@ -16,7 +16,7 @@ function CreatePost(props) {
         body: body,
         token: localStorage.getItem("appToken"),
       });
-      console.log("User was successfuly created");
+      props.addFlashMessage("Post successfuly created.");
 
       // Redirect to the new post url
       props.history.push(`/post/${response.data}`);
