@@ -27,10 +27,7 @@ function HeaderLoggedOut(props) {
         password: password,
       });
       if (response.data) {
-        localStorage.setItem("appToken", response.data.token);
-        localStorage.setItem("appUsername", response.data.username);
-        localStorage.setItem("appAvatar", response.data.avatar);
-        appDispatch({ type: "logout" });
+        appDispatch({ type: "logout", data: response.data });
       } else {
         console.log("Incorrect username or password");
       }

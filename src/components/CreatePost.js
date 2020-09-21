@@ -2,11 +2,13 @@ import React, { useState, useContext } from "react";
 import { withRouter } from "react-router-dom";
 import Axios from "axios";
 
+import StateContext from "../StateContext";
 import DispatchContext from "../DispatchContext";
 
 import Page from "./Page";
 
 function CreatePost(props) {
+  const appState = useContext(StateContext);
   const appDispatch = useContext(DispatchContext);
 
   const [title, setTitle] = useState();
@@ -18,7 +20,7 @@ function CreatePost(props) {
       const response = await Axios.post("http://localhost:8080/create-post", {
         title: title,
         body: body,
-        token: localStorage.getItem("appToken"),
+        token: appState.user.token,
       });
       appDispatch({
         type: "flashMessage",

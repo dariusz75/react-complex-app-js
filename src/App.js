@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useImmerReducer } from "use-immer";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
@@ -22,12 +22,18 @@ function App() {
   const initialState = {
     loggedIn: Boolean(appToken),
     flashMessages: [],
+    user: {
+      token: localStorage.getItem("appToken"),
+      username: localStorage.getItem("appUsername"),
+      avatar: localStorage.getItem("appAvatar"),
+    },
   };
 
   function ourReducer(draft, action) {
     switch (action.type) {
       case "login":
         draft.loggedIn = true;
+        draft.user = action.data;
         break;
       case "logout":
         draft.loggedIn = false;
@@ -41,6 +47,18 @@ function App() {
   }
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState);
+
+  useEffect(() => {
+    if (state.loggedIn) {
+      localStorage.setItem("appToken", state.user.token);
+      localStorage.setItem("appUsername", state.user.username);
+      localStorage.setItem("appAvatar", state.user.avatar);
+    } else {
+      localStorage.removeItem("appToken");
+      localStorage.removeItem("appUsername");
+      localStorage.removeItem("appAvatar");
+    }
+  }, [state.loggedIn]);
 
   return (
     <StateContext.Provider value={state}>

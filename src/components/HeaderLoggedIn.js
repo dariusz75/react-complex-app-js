@@ -8,7 +8,6 @@ function HeaderLoggedIn(props) {
 
   const handleLoggedOut = () => {
     appDispatch({ type: "logout" });
-    localStorage.removeItem("appToken");
   };
 
   return (
