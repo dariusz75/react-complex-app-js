@@ -1,5 +1,8 @@
 12-flash-messages
 
-- FlashMessages.js
+- ExampleContext.js
 - App.js
 - CreatePost.js
+- Header.js
+- HeaderLoggedOut.js
+- HeaderLoggedIn.js

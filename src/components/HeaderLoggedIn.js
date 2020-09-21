@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
+import ExampleContext from "../ExampleContext";
+
 function HeaderLoggedIn(props) {
+  const { setLoggedIn } = useContext(ExampleContext);
+
   const handleLoggedOut = () => {
-    props.setLoggedIn(false);
+    setLoggedIn(false);
     localStorage.removeItem("appToken");
   };
 

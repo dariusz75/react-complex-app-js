@@ -3,6 +3,8 @@ import "./App.css";
 
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
+import ExampleContext from "./ExampleContext";
+
 import Header from "./components/Header";
 import HomeGuest from "./components/HomeGuest";
 import Home from "./components/Home";
@@ -23,29 +25,31 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-      <FlashMessages messages={flashMessages} />
-      <Switch>
-        <Route path="/" exact>
-          {loggedIn ? <Home /> : <HomeGuest />}
-        </Route>
-        <Route path="/about-us">
-          <About />
-        </Route>
-        <Route path="/terms" exact>
-          <Terms />
-        </Route>
-        <Route path="/create-post" exact>
-          <CreatePost addFlashMessage={addFlashMessage} />
-        </Route>
-        <Route path="/post/:id" exact>
-          <ViewSinglePost />
-        </Route>
-      </Switch>
+    <ExampleContext.Provider value={{ addFlashMessage, setLoggedIn }}>
+      <BrowserRouter>
+        <Header loggedIn={loggedIn} />
+        <FlashMessages messages={flashMessages} />
+        <Switch>
+          <Route path="/" exact>
+            {loggedIn ? <Home /> : <HomeGuest />}
+          </Route>
+          <Route path="/about-us">
+            <About />
+          </Route>
+          <Route path="/terms" exact>
+            <Terms />
+          </Route>
+          <Route path="/create-post" exact>
+            <CreatePost />
+          </Route>
+          <Route path="/post/:id" exact>
+            <ViewSinglePost />
+          </Route>
+        </Switch>
 
-      <Footer />
-    </BrowserRouter>
+        <Footer />
+      </BrowserRouter>
+    </ExampleContext.Provider>
   );
 }
 

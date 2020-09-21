@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Axios from "axios";
+
+import ExampleContext from "../ExampleContext";
 
 function HeaderLoggedOut(props) {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+
+  const { setLoggedIn } = useContext(ExampleContext);
 
   const handleSetUsername = (e) => {
     setUsername(e.target.value);
@@ -23,7 +27,7 @@ function HeaderLoggedOut(props) {
         password: password,
       });
       if (response.data) {
-        props.setLoggedIn(true);
+        setLoggedIn(true);
         localStorage.setItem("appToken", response.data.token);
         localStorage.setItem("appUsername", response.data.username);
         localStorage.setItem("appAvatar", response.data.avatar);
