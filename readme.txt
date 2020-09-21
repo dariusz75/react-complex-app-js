@@ -1,8 +1,9 @@
 12-flash-messages
 
-- ExampleContext.js
 - App.js
+- Statecontext.js
+- Dispatchcontext.js
 - CreatePost.js
 - Header.js
-- HeaderLoggedOut.js
 - HeaderLoggedIn.js
+- HeaderLoggedOut.js
