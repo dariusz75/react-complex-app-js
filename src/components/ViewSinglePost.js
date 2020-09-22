@@ -6,6 +6,7 @@ import moment from "moment";
 import StateContext from "../StateContext";
 
 import Page from "./Page";
+import LoadingDotsIcon from "./LoadingDotsIcon";
 
 function ViewsinglePost() {
   const appState = useContext(StateContext);
@@ -31,7 +32,7 @@ function ViewsinglePost() {
 
   return isLoading ? (
     <Page title="...">
-      <div>Loading...</div>
+      <LoadingDotsIcon />
     </Page>
   ) : (
     <Page title={post.title}>

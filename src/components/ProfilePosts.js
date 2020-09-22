@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
 
+import LoadingDotsIcon from "./LoadingDotsIcon";
+
 function ProfilePosts() {
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -26,7 +28,7 @@ function ProfilePosts() {
   }, []);
 
   return isLoading ? (
-    <div>Loading...</div>
+    <LoadingDotsIcon />
   ) : (
     <div className="list-group">
       {posts.map((post) => {
