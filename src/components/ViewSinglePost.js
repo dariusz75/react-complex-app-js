@@ -16,18 +16,27 @@ function ViewsinglePost() {
   const { id } = useParams();
 
   useEffect(() => {
+    const cancelTokenRequest = Axios.CancelToken.source();
     async function fetchPost() {
       try {
-        const response = await Axios.get(`http://localhost:8080/post/${id}`);
+        const response = await Axios.get(`http://localhost:8080/post/${id}`, {
+          cancelToken: cancelTokenRequest.token,
+        });
         console.log("response from ViewSinglePost is: ", response.data);
         setPost(response.data);
         setIsLoading(false);
         console.log("The posts page response is: ", response.data);
       } catch (e) {
-        console.log("There was a problem! ", e);
+        console.log(
+          "There was a problem or the request has been cancelled.",
+          e
+        );
       }
     }
     fetchPost();
+    return () => {
+      cancelTokenRequest.cancel();
+    };
   }, []);
 
   return isLoading ? (

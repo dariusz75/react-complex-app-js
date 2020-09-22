@@ -12,19 +12,23 @@ function ProfilePosts() {
   const { username } = useParams();
 
   useEffect(() => {
+    const cancelTokenRequest = Axios.CancelToken.source();
     async function fetchData() {
       try {
         const response = await Axios.get(
-          `http://localhost:8080/profile/${username}/posts`
+          `http://localhost:8080/profile/${username}/posts`,
+          { cancelToken: cancelTokenRequest.token }
         );
         setPosts(response.data);
         setIsLoading(false);
-        console.log("The posts page response is: ", response.data);
       } catch (e) {
         console.log("There was a problem! ", e);
       }
     }
     fetchData();
+    return () => {
+      cancelTokenRequest.cancel();
+    };
   }, []);
 
   return isLoading ? (

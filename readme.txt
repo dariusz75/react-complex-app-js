@@ -1,5 +1,5 @@
-20-animated-loading-icon
+20-cleaning-after-useEffect
 
-- LoadingDotsIcon.js
-- ProfilePosts.js
 - ViewSinglePost.js
+- ProfilePosts.js
+- Profile.js
