@@ -6,6 +6,7 @@ import Axios from "axios";
 import StateContext from "../StateContext";
 
 import Page from "./Page";
+import ProfilePosts from "./ProfilePosts";
 
 function Profile() {
   const initialProfileState = {
@@ -33,7 +34,7 @@ function Profile() {
           }
         );
         setProfileData(response.data);
-        console.log("The profile response is: ", response.data);
+        console.log("The profile page response is: ", response.data);
       } catch (e) {
         console.log("Ther was a problem!", e);
       }
@@ -63,35 +64,7 @@ function Profile() {
         </Link>
       </div>
 
-      <div className="list-group">
-        <Link to="#" className="list-group-item list-group-item-action">
-          <img
-            alt=""
-            className="avatar-tiny"
-            src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
-          />{" "}
-          <strong>Example Post #1</strong>
-          <span className="text-muted small">on 2/10/2020 </span>
-        </Link>
-        <Link to="#" className="list-group-item list-group-item-action">
-          <img
-            alt=""
-            className="avatar-tiny"
-            src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
-          />{" "}
-          <strong>Example Post #2</strong>
-          <span className="text-muted small">on 2/10/2020 </span>
-        </Link>
-        <Link to="#" className="list-group-item list-group-item-action">
-          <img
-            alt=""
-            className="avatar-tiny"
-            src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
-          />{" "}
-          <strong>Example Post #3</strong>
-          <span className="text-muted small">on 2/10/2020 </span>
-        </Link>
-      </div>
+      <ProfilePosts />
     </Page>
   );
 }

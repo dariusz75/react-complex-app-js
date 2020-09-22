@@ -59,7 +59,7 @@ function App() {
       localStorage.removeItem("appUsername");
       localStorage.removeItem("appAvatar");
     }
-  }, [state.loggedIn]);
+  }, []);
 
   return (
     <StateContext.Provider value={state}>
@@ -74,17 +74,17 @@ function App() {
             <Route path="/" exact>
               {state.loggedIn ? <Home /> : <HomeGuest />}
             </Route>
+            <Route path="/post/:id">
+              <ViewSinglePost />
+            </Route>
+            <Route path="/create-post">
+              <CreatePost />
+            </Route>
             <Route path="/about-us">
               <About />
             </Route>
-            <Route path="/terms" exact>
+            <Route path="/terms">
               <Terms />
-            </Route>
-            <Route path="/create-post" exact>
-              <CreatePost />
-            </Route>
-            <Route path="/post/:id" exact>
-              <ViewSinglePost />
             </Route>
           </Switch>
 
