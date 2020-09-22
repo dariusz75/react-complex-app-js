@@ -12,15 +12,16 @@ function ViewsinglePost() {
           <Link to="#" className="text-primary mr-2" title="Edit">
             <i className="fas fa-edit"></i>
           </Link>
-          <a className="delete-post-button text-danger" title="Delete">
+          <Link className="delete-post-button text-danger" title="Delete">
             <i className="fas fa-trash"></i>
-          </a>
+          </Link>
         </span>
       </div>
 
       <p className="text-muted small mb-4">
         <Link to="#">
           <img
+            alt=""
             className="avatar-tiny"
             src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
           />

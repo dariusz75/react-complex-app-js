@@ -2,9 +2,11 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import DispatchContext from "../DispatchContext";
+import StateContext from "../StateContext";
 
 function HeaderLoggedIn(props) {
   const appDispatch = useContext(DispatchContext);
+  const appState = useContext(StateContext);
 
   const handleLoggedOut = () => {
     appDispatch({ type: "logout" });
@@ -19,7 +21,7 @@ function HeaderLoggedIn(props) {
         <i className="fas fa-comment"></i>
         <span className="chat-count-badge text-white"> </span>
       </span>
-      <Link to="#" className="mr-2">
+      <Link to={`profile/${appState.user.username}`} className="mr-2">
         <img
           alt="avatar"
           className="small-header-avatar"

@@ -1,7 +1,5 @@
 12-flash-messages
 
+- Profile.js
 - App.js
-- HeaderLoggedOut.js
 - HeaderLoggedIn.js
-- Home.js
-- CreatePost.js
