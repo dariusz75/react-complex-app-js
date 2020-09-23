@@ -1,4 +1,4 @@
-24-edit-post
+24-edit-post-my-solution
 
 - EditPost.js
 - Main.js
