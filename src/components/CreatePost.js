@@ -24,7 +24,7 @@ function CreatePost(props) {
       });
       appDispatch({
         type: "flashMessage",
-        value: "Post successfuly created!!!.",
+        value: "Post successfully created!!!.",
       });
 
       // Redirect to the new post url

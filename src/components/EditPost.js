@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
+import { useImmerReducer } from "use-immer";
+import { useParams } from "react-router-dom";
 import Axios from "axios";
-import moment from "moment";
 
 import StateContext from "../StateContext";
 import DispatchContext from "../DispatchContext";
@@ -9,28 +9,68 @@ import DispatchContext from "../DispatchContext";
 import Page from "./Page";
 import LoadingDotsIcon from "./LoadingDotsIcon";
 
-function EditPost(props) {
+function EditPost() {
   const appState = useContext(StateContext);
   const appDispatch = useContext(DispatchContext);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const initialState = {
+    title: {
+      value: "",
+      hasError: false,
+      message: "",
+    },
+    body: {
+      value: "",
+      hasError: false,
+      message: "",
+    },
+    isFetching: true,
+    isSaving: false,
+    id: useParams().id,
+    sendCount: 0,
+  };
 
-  const [title, setTitle] = useState();
-  const [body, setBody] = useState();
+  const editPostReducer = (draft, action) => {
+    switch (action.type) {
+      case "fetchComplete":
+        draft.title.value = action.value.title;
+        draft.body.value = action.value.body;
+        draft.isFetching = false;
+        break;
+      case "titleChange":
+        draft.title.value = action.value;
+        break;
+      case "bodyChange":
+        draft.body.value = action.value;
+        break;
+      case "saveChanges":
+        draft.sendCount++;
+        break;
+      case "saveRequestStarted":
+        draft.isSaving = true;
+        break;
+      case "saveRequestFinished":
+        draft.isSaving = false;
+        break;
+      default:
+        break;
+    }
+  };
 
-  const { id } = useParams();
+  const [state, dispatch] = useImmerReducer(editPostReducer, initialState);
 
   useEffect(() => {
     const cancelTokenRequest = Axios.CancelToken.source();
     async function fetchPost() {
       try {
-        const response = await Axios.get(`http://localhost:8080/post/${id}`, {
-          cancelToken: cancelTokenRequest.token,
-        });
+        const response = await Axios.get(
+          `http://localhost:8080/post/${state.id}`,
+          {
+            cancelToken: cancelTokenRequest.token,
+          }
+        );
         console.log("response from ViewSinglePost is: ", response.data);
-        setTitle(response.data.title);
-        setBody(response.data.body);
-        setIsLoading(false);
+        dispatch({ type: "fetchComplete", value: response.data });
         console.log("The posts page response is: ", response.data);
       } catch (e) {
         console.log(
@@ -45,43 +85,63 @@ function EditPost(props) {
     };
   }, []);
 
-  const handleEditTitle = (e) => {
-    setTitle(e.target.value);
-    console.log("title is: ", title);
-  };
-
-  const handleEditBody = (e) => {
-    setBody(e.target.value);
-    console.log("body is: ", body);
-  };
-
-  const handleSaveChanges = async (e) => {
-    e.preventDefault();
-    try {
-      await Axios.post(`http://localhost:8080/post/${id}/edit`, {
-        title: title,
-        body: body,
-        token: appState.user.token,
-      });
-      appDispatch({
-        type: "flashMessage",
-        value: "Post successfully edited!!!.",
-      });
-
-      // Redirect to the new post url
-      props.history.push(`/post/${id}`);
-    } catch (e) {
-      console.log("There was an error");
+  useEffect(() => {
+    if (state.sendCount > 0) {
+      dispatch({ type: "saveRequestStarted" });
+      const cancelTokenRequest = Axios.CancelToken.source();
+      async function fetchPost() {
+        try {
+          const response = await Axios.post(
+            `http://localhost:8080/post/${state.id}/edit`,
+            {
+              title: state.title.value,
+              body: state.body.value,
+              token: appState.user.token,
+            },
+            {
+              cancelToken: cancelTokenRequest.token,
+            }
+          );
+          dispatch({ type: "fetchComplete", value: response.data });
+          appDispatch({
+            type: "flashMessage",
+            value: "Post successfully edited!!!.",
+          });
+          dispatch({ type: "saveRequestFinished" });
+        } catch (e) {
+          console.log(
+            "There was a problem or the request has been cancelled.",
+            e
+          );
+        }
+      }
+      fetchPost();
+      return () => {
+        cancelTokenRequest.cancel();
+      };
     }
+  }, [state.sendCount]);
+
+  const handleTitle = (e) => {
+    dispatch({ type: "titleChange", value: e.target.value });
   };
 
-  return isLoading ? (
+  const handleBody = (e) => {
+    dispatch({ type: "bodyChange", value: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch({ type: "saveChanges" });
+  };
+
+  return state.isFetching ? (
     <Page title="...">
       <LoadingDotsIcon />
     </Page>
   ) : (
-    <Page title="Edit post">
-      <form onSubmit={handleSaveChanges}>
+    <Page title="Edit Post">
+      <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="post-title" className="text-muted mb-1">
             <small>Title</small>
@@ -94,8 +154,8 @@ function EditPost(props) {
             type="text"
             placeholder=""
             autoComplete="off"
-            defaultValue={title}
-            onChange={handleEditTitle}
+            value={state.title.value}
+            onChange={handleTitle}
           />
         </div>
 
@@ -108,12 +168,14 @@ function EditPost(props) {
             id="post-body"
             className="body-content tall-textarea form-control"
             type="text"
-            defaultValue={body}
-            onChange={handleEditBody}
-          />
+            value={state.body.value}
+            onChange={handleBody}
+          ></textarea>
         </div>
 
-        <button className="btn btn-primary">Save Changes</button>
+        <button className="btn btn-primary" disabled={state.isSaving}>
+          {state.isSaving ? "Saving..." : "Save Changes"}
+        </button>
       </form>
     </Page>
   );

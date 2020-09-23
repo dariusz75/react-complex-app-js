@@ -10,7 +10,7 @@ import StateContext from "../StateContext";
 import Page from "./Page";
 import LoadingDotsIcon from "./LoadingDotsIcon";
 
-function ViewsinglePost() {
+function ViewSinglePost() {
   const appState = useContext(StateContext);
   const [isLoading, setIsLoading] = useState(true);
   const [post, setPost] = useState();
@@ -89,4 +89,4 @@ function ViewsinglePost() {
   );
 }
 
-export default ViewsinglePost;
+export default ViewSinglePost;
