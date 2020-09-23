@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
+import ReactMarkdown from "react-markdown";
 
 import StateContext from "../StateContext";
 
@@ -73,7 +74,7 @@ function ViewsinglePost() {
       </p>
 
       <div className="body-content">
-        <p>{post.body}</p>
+        <ReactMarkdown source={post.body} />
       </div>
     </Page>
   );
