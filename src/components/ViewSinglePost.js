@@ -3,11 +3,13 @@ import { Link, useParams } from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
 import ReactMarkdown from "react-markdown";
+import ReacTooltip from "react-tooltip";
 
 import StateContext from "../StateContext";
 
 import Page from "./Page";
 import LoadingDotsIcon from "./LoadingDotsIcon";
+import ReactTooltip from "react-tooltip";
 
 function ViewsinglePost() {
   const appState = useContext(StateContext);
@@ -49,16 +51,24 @@ function ViewsinglePost() {
       <div className="d-flex justify-content-between">
         <h2>{post.title}</h2>
         <span className="pt-2">
-          <Link to="#" className="text-primary mr-2" title="Edit">
+          <Link
+            to="#"
+            className="text-primary mr-2"
+            data-tip="Edit"
+            data-for="edit"
+          >
             <i className="fas fa-edit"></i>
           </Link>
+          <ReactTooltip id="edit" className="custom-tooltip" />{" "}
           <Link
             to="#"
             className="delete-post-button text-danger"
-            title="Delete"
+            data-tip="Delete"
+            data-for="delete"
           >
             <i className="fas fa-trash"></i>
           </Link>
+          <ReactTooltip id="delete" className="custom-tooltip" />
         </span>
       </div>
 
