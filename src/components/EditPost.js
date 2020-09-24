@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { useImmerReducer } from "use-immer";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Axios from "axios";
 
 import StateContext from "../StateContext";
@@ -8,6 +8,7 @@ import DispatchContext from "../DispatchContext";
 
 import Page from "./Page";
 import LoadingDotsIcon from "./LoadingDotsIcon";
+import NotFound from "./NotFound";
 
 function EditPost() {
   const appState = useContext(StateContext);
@@ -28,6 +29,7 @@ function EditPost() {
     isSaving: false,
     id: useParams().id,
     sendCount: 0,
+    notFound: false,
   };
 
   const editPostReducer = (draft, action) => {
@@ -69,6 +71,9 @@ function EditPost() {
           draft.body.message = "Please provide a content";
         }
         break;
+      case "notFound":
+        draft.notFound = true;
+        break;
       default:
         break;
     }
@@ -86,9 +91,11 @@ function EditPost() {
             cancelToken: cancelTokenRequest.token,
           }
         );
-        console.log("response from ViewSinglePost is: ", response.data);
-        dispatch({ type: "fetchComplete", value: response.data });
-        console.log("The posts page response is: ", response.data);
+        if (response.data) {
+          dispatch({ type: "fetchComplete", value: response.data });
+        } else {
+          dispatch({ type: "notFound" });
+        }
       } catch (e) {
         console.log(
           "There was a problem or the request has been cancelled.",
@@ -162,13 +169,24 @@ function EditPost() {
     dispatch({ type: "saveChanges" });
   };
 
-  return state.isFetching ? (
-    <Page title="...">
-      <LoadingDotsIcon />
-    </Page>
-  ) : (
+  if (state.isFetching) {
+    return (
+      <Page title="...">
+        <LoadingDotsIcon />
+      </Page>
+    );
+  }
+
+  if (state.notFound) {
+    return <NotFound />;
+  }
+
+  return (
     <Page title="Edit Post">
-      <form onSubmit={handleSubmit}>
+      <Link className="small font-weight-bold" to={`/post/${state.id}`}>
+        &laquo; Back to post
+      </Link>
+      <form className="mt-3" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="post-title" className="text-muted mb-1">
             <small>Title</small>

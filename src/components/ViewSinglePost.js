@@ -9,6 +9,7 @@ import StateContext from "../StateContext";
 
 import Page from "./Page";
 import LoadingDotsIcon from "./LoadingDotsIcon";
+import NotFound from "./NotFound";
 
 function ViewSinglePost() {
   const appState = useContext(StateContext);
@@ -41,11 +42,19 @@ function ViewSinglePost() {
     };
   }, []);
 
-  return isLoading ? (
-    <Page title="...">
-      <LoadingDotsIcon />
-    </Page>
-  ) : (
+  if (isLoading) {
+    return (
+      <Page title="...">
+        <LoadingDotsIcon />
+      </Page>
+    );
+  }
+
+  if (!isLoading && !post) {
+    return <NotFound />;
+  }
+
+  return (
     <Page title={post.title}>
       <div className="d-flex justify-content-between">
         <h2>{post.title}</h2>
