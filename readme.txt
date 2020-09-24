@@ -1,7 +1,5 @@
-27-page-not-found
+28-delete-post
 
-- NotFound.js
-- EditPost.js
 - ViewSinglePost.js
-- App.js
+
 

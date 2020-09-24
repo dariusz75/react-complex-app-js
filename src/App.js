@@ -37,7 +37,9 @@ function App() {
       case "login":
         draft.loggedIn = true;
         draft.user = action.data;
-        console.log("data on logging is: ", action.data);
+        localStorage.setItem("appAvatar", action.data.avatar);
+        localStorage.setItem("appUsername", action.data.username);
+        localStorage.setItem("appToken", action.data.token);
         break;
       case "logout":
         draft.loggedIn = false;
