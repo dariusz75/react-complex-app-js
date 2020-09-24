@@ -39,18 +39,35 @@ function EditPost() {
         break;
       case "titleChange":
         draft.title.value = action.value;
+        draft.title.hasError = false;
         break;
       case "bodyChange":
         draft.body.value = action.value;
+        draft.body.hasError = false;
         break;
       case "saveChanges":
-        draft.sendCount++;
+        if (!draft.title.hasError && !draft.body.hasError) {
+          draft.sendCount++;
+        }
+
         break;
       case "saveRequestStarted":
         draft.isSaving = true;
         break;
       case "saveRequestFinished":
         draft.isSaving = false;
+        break;
+      case "titleBlur":
+        if (!action.value.trim()) {
+          draft.title.hasError = true;
+          draft.title.message = "Please provide a title";
+        }
+        break;
+      case "bodyBlur":
+        if (!action.value.trim()) {
+          draft.body.hasError = true;
+          draft.body.message = "Please provide a content";
+        }
         break;
       default:
         break;
@@ -126,12 +143,22 @@ function EditPost() {
     dispatch({ type: "titleChange", value: e.target.value });
   };
 
+  const handleTitleBlur = (e) => {
+    dispatch({ type: "titleBlur", value: e.target.value });
+  };
+
   const handleBody = (e) => {
     dispatch({ type: "bodyChange", value: e.target.value });
   };
 
+  const handleBodyBlur = (e) => {
+    dispatch({ type: "bodyBlur", value: e.target.value });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch({ type: "titleBlur", value: state.title.value });
+    dispatch({ type: "bodyBlur", value: state.body.value });
     dispatch({ type: "saveChanges" });
   };
 
@@ -156,7 +183,13 @@ function EditPost() {
             autoComplete="off"
             value={state.title.value}
             onChange={handleTitle}
+            onBlur={handleTitleBlur}
           />
+          {state.title.hasError && (
+            <div className="alert alert-danger small liveValidateMessage">
+              {state.title.message}
+            </div>
+          )}
         </div>
 
         <div className="form-group">
@@ -170,7 +203,13 @@ function EditPost() {
             type="text"
             value={state.body.value}
             onChange={handleBody}
+            onBlur={handleBodyBlur}
           ></textarea>
+          {state.body.hasError && (
+            <div className="alert alert-danger small liveValidateMessage">
+              {state.body.message}
+            </div>
+          )}
         </div>
 
         <button className="btn btn-primary" disabled={state.isSaving}>

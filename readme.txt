@@ -1,5 +1,4 @@
-24-edit-post-my-solution
+26-form-validation
 
 - EditPost.js
-- Main.js
-- ViewSinglePost.js
+
