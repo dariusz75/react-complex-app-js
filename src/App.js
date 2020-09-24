@@ -37,9 +37,13 @@ function App() {
       case "login":
         draft.loggedIn = true;
         draft.user = action.data;
+        console.log("data on logging is: ", action.data);
         break;
       case "logout":
         draft.loggedIn = false;
+        localStorage.removeItem("appAvatar");
+        localStorage.removeItem("appUsername");
+        localStorage.removeItem("appToken");
         break;
       case "flashMessage":
         draft.flashMessages.push(action.value);

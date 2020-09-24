@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import DispatchContext from "../DispatchContext";
 import StateContext from "../StateContext";
@@ -10,6 +10,7 @@ function HeaderLoggedIn(props) {
 
   const handleLoggedOut = () => {
     appDispatch({ type: "logout" });
+    props.history.push("/");
   };
 
   return (
@@ -38,4 +39,4 @@ function HeaderLoggedIn(props) {
   );
 }
 
-export default HeaderLoggedIn;
+export default withRouter(HeaderLoggedIn);
