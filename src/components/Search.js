@@ -1,14 +1,52 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useImmer } from "use-immer";
 
 import DispatchContext from "../DispatchContext";
 
 function Search() {
   const appDispatch = useContext(DispatchContext);
+  const didMount = useRef(false);
 
-  const handleOpenClose = (e) => {
+  const [state, setState] = useImmer({
+    searchTerm: "",
+    results: [],
+    show: "neither",
+    requestCount: 0,
+  });
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (didMount.current) {
+        setState((draft) => {
+          draft.requestCount++;
+        });
+      } else {
+        didMount.current = true;
+      }
+    }, 3000);
+
+    return () => {
+      clearTimeout(delay);
+    };
+  }, [state.searchTerm]);
+
+  useEffect(() => {
+    if (state.requestCount) {
+      console.log("requestCount is: ", state.requestCount);
+    }
+  }, [state.requestCount]);
+
+  const handleClose = (e) => {
     e.preventDefault();
     appDispatch({ type: "isSearchClose" });
+  };
+
+  const handleInput = (e) => {
+    const searchValue = e.target.value;
+    setState((draft) => {
+      draft.searchTerm = searchValue;
+    });
   };
 
   return (
@@ -25,8 +63,9 @@ function Search() {
             id="live-search-field"
             className="live-search-field"
             placeholder="What are you interested in?"
+            onChange={handleInput}
           />
-          <span onClick={handleOpenClose} className="close-live-search">
+          <span onClick={handleClose} className="close-live-search">
             <i className="fas fa-times-circle"></i>
           </span>
         </div>
