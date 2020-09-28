@@ -42,7 +42,7 @@ function ViewSinglePost(props) {
     return () => {
       cancelTokenRequest.cancel();
     };
-  }, []);
+  }, [id]);
 
   function isOwner() {
     if (appState.loggedIn) {
