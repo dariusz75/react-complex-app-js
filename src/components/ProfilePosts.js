@@ -29,7 +29,7 @@ function ProfilePosts() {
     return () => {
       cancelTokenRequest.cancel();
     };
-  }, []);
+  }, [username]);
 
   return isLoading ? (
     <LoadingDotsIcon />
