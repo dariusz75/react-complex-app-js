@@ -1,5 +1,3 @@
-34-subnav-for-posts-followers-and-following-tabs
+35-homepage-post-feed
 
-- Profile.js
-- ProfileFollowers.js
-- ProfileFollowing.js
+- Home.js

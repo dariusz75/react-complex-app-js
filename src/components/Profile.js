@@ -48,7 +48,6 @@ function Profile() {
         setState((draft) => {
           draft.profileData = response.data;
         });
-        console.log("The profile page response is: ", response.data);
       } catch (e) {
         console.log(
           "There was a problem or the request has been cancelled.",
