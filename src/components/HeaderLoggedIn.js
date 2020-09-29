@@ -19,6 +19,10 @@ function HeaderLoggedIn(props) {
     appDispatch({ type: "isSearchOpen" });
   };
 
+  const toggleChat = () => {
+    appDispatch({ type: "toggleChat" });
+  };
+
   return (
     <div className="flex-row my-3 my-md-0">
       <Link
@@ -35,6 +39,7 @@ function HeaderLoggedIn(props) {
         className="mr-2 header-chat-icon text-white pr-1"
         data-tip="Chat"
         data-for="chat"
+        onClick={toggleChat}
       >
         <i className="fas fa-comment"></i>
         <span className="chat-count-badge text-white"> </span>

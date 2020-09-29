@@ -44,7 +44,6 @@ function Search() {
 
   useEffect(() => {
     if (state.requestCount) {
-      console.log("requestCount is: ", state.requestCount);
       const cancelRequest = Axios.CancelToken.source();
       async function fetchSearchResults() {
         try {
