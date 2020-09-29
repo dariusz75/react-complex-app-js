@@ -36,13 +36,23 @@ function HeaderLoggedIn(props) {
       </Link>
       <ReactTooltip id="search-tooltip" className="custom-tooltip" />
       <span
-        className="mr-2 header-chat-icon text-white pr-1"
+        className={
+          "mr-2 header-chat-icon pr-1 " +
+          (appState.unreadChatCount ? " text-danger" : "text-white")
+        }
         data-tip="Chat"
         data-for="chat"
         onClick={toggleChat}
       >
         <i className="fas fa-comment"></i>
-        <span className="chat-count-badge text-white"> </span>
+        {appState.unreadChatCount ? (
+          <span className="chat-count-badge text-white">
+            {" "}
+            {appState.unreadChatCount < 10 ? appState.unreadChatCount : "9+"}
+          </span>
+        ) : (
+          ""
+        )}
       </span>
       <ReactTooltip id="chat" className="custom-tooltip" />
       <Link

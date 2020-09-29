@@ -12,6 +12,7 @@ function Chat() {
   const appDispatch = useContext(DispatchContext);
   const appState = useContext(StateContext);
   const chatField = useRef(null);
+  const chat = useRef(null);
   const initialState = {
     chatInputValue: "",
     chatMessages: [],
@@ -21,6 +22,7 @@ function Chat() {
   useEffect(() => {
     if (appState.isChatOpen) {
       chatField.current.focus();
+      appDispatch({ type: "clearUnreadChatCount" });
     }
   }, [appState.isChatOpen]);
 
@@ -31,6 +33,13 @@ function Chat() {
       });
     });
   }, []);
+
+  useEffect(() => {
+    chat.current.scrollTop = chat.current.scrollHeight;
+    if (state.chatMessages.length > 0 && !appState.isChatOpen) {
+      appDispatch({ type: "incrementUnreadChatCount" });
+    }
+  }, [state.chatMessages]);
 
   const closeChat = () => {
     appDispatch({ type: "closeChat" });
@@ -59,8 +68,6 @@ function Chat() {
       });
       draft.chatInputValue = "";
     });
-    console.log(state.chatInputValue);
-    console.log(state.chatMessages);
   };
 
   return (
@@ -77,7 +84,7 @@ function Chat() {
           <i className="fas fa-times-circle"></i>
         </span>
       </div>
-      <div id="chat" className="chat-log">
+      <div id="chat" className="chat-log" ref={chat}>
         {state.chatMessages.map((message, index) => {
           if (message.username === appState.user.username) {
             return (
@@ -95,13 +102,14 @@ function Chat() {
           }
           return (
             <div key={index} className="chat-other">
-              <Link to="#">
+              <Link to={`profile/${message.username}`}>
                 <img alt="" className="avatar-tiny" src={message.avatar} />
               </Link>
               <div className="chat-message">
                 <div className="chat-message-inner">
-                  <Link to="#">
-                    <strong>{message.username}:</strong>
+                  <Link to={`profile/${message.username}`}>
+                    <strong>{message.username}: </strong>
+                    <br></br>
                   </Link>
                   {message.message}
                 </div>
