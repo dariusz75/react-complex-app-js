@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Axios from "axios";
 import { useImmerReducer } from "use-immer";
 import { CSSTransition } from "react-transition-group";
@@ -48,16 +48,42 @@ function HomeGuest() {
         }
         break;
       case "usernameAfterDelay":
+        if (draft.username.value.length < 5) {
+          draft.username.hasErrors = true;
+          draft.username.message = "Username must be at least 5 characters.";
+        }
+        if (!draft.hasErrors) {
+          draft.username.checkCount++;
+        }
         break;
       case "usernameUniqueResults":
+        if (action.value) {
+          draft.username.hasErrors = true;
+          draft.username.isUnique = false;
+          draft.username.message = "The username already exists.";
+        } else {
+          draft.username.isUnique = true;
+        }
         break;
       case "emailImmediately":
         draft.email.hasErrors = false;
         draft.email.value = action.value;
         break;
       case "emailAfterDelay":
+        if (!/^\S+@\S+$/.test(draft.email.value)) {
+          draft.email.hasErrors = true;
+          draft.email.message = "Please enter a valid email address.";
+        }
+        if (!draft.email.hasErrors) {
+          draft.email.checkCount++;
+        }
         break;
       case "emailUniqueResults":
+        if (action.value) {
+          draft.email.hasErrors = true;
+          draft.email.isUnique = false;
+          draft.email.message = "The email address already exists.";
+        }
         break;
       case "passwordImmediately":
         draft.password.hasErrors = false;
@@ -73,6 +99,88 @@ function HomeGuest() {
   };
 
   const [state, dispatch] = useImmerReducer(formReducer, initialState);
+
+  useEffect(() => {
+    if (state.username.value) {
+      const delay = setTimeout(() => {
+        dispatch({ type: "usernameAfterDelay" });
+      }, 1200);
+
+      return () => {
+        clearTimeout(delay);
+      };
+    }
+  }, [state.username.value]);
+
+  useEffect(() => {
+    if (state.email.value) {
+      const delay = setTimeout(() => {
+        dispatch({ type: "emailAfterDelay" });
+      }, 1200);
+
+      return () => {
+        clearTimeout(delay);
+      };
+    }
+  }, [state.email.value]);
+
+  useEffect(() => {
+    if (state.password.value) {
+      const delay = setTimeout(() => {
+        dispatch({ type: "passwordAfterDelay" });
+      }, 1200);
+
+      return () => {
+        clearTimeout(delay);
+      };
+    }
+  }, [state.password.value]);
+
+  useEffect(() => {
+    if (state.username.checkCount) {
+      const cancelRequest = Axios.CancelToken.source();
+      async function fetchSearchResults() {
+        try {
+          const response = await Axios.post(
+            "http://localhost:8080/doesUsernameExist",
+            { username: state.username.value },
+            { cancelToken: cancelRequest.token }
+          );
+          dispatch({ type: "usernameUniqueResults", value: response.data });
+        } catch (e) {
+          console.log("There was a problem or the request was cancelled. ", e);
+        }
+      }
+      fetchSearchResults();
+
+      return () => {
+        cancelRequest.cancel();
+      };
+    }
+  }, [state.username.checkCount]);
+
+  useEffect(() => {
+    if (state.email.checkCount) {
+      const cancelRequest = Axios.CancelToken.source();
+      async function fetchSearchResults() {
+        try {
+          const response = await Axios.post(
+            "http://localhost:8080/doesEmailExist",
+            { email: state.email.value },
+            { cancelToken: cancelRequest.token }
+          );
+          dispatch({ type: "emailUniqueResults", value: response.data });
+        } catch (e) {
+          console.log("There was a problem or the request was cancelled. ", e);
+        }
+      }
+      fetchSearchResults();
+
+      return () => {
+        cancelRequest.cancel();
+      };
+    }
+  }, [state.email.checkCount]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -154,6 +262,16 @@ function HomeGuest() {
                 autoComplete="off"
                 onChange={handleSetEmail}
               />
+              <CSSTransition
+                classNames="liveValidateMessage"
+                in={state.email.hasErrors}
+                timeout={330}
+                unmountOnExit
+              >
+                <div className="alert alert-danger small liveValidateMessage">
+                  {state.email.message}
+                </div>
+              </CSSTransition>
             </div>
             <div className="form-group">
               <label htmlFor="password-register" className="text-muted mb-1">
