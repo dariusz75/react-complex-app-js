@@ -83,13 +83,24 @@ function HomeGuest() {
           draft.email.hasErrors = true;
           draft.email.isUnique = false;
           draft.email.message = "The email address already exists.";
+        } else {
+          draft.email.isUnique = true;
         }
         break;
       case "passwordImmediately":
         draft.password.hasErrors = false;
         draft.password.value = action.value;
+        if (draft.password.value.length > 20) {
+          draft.password.hasErrors = true;
+          draft.password.message = "Password can not exceed 20 characters.";
+        }
         break;
       case "passwordAfterDelay":
+        if (draft.password.value.length < 12) {
+          draft.password.hasErrors = true;
+          draft.password.message = "Password must be at least 12 characters.";
+        }
+
         break;
       case "submitForm":
         break;
@@ -285,6 +296,16 @@ function HomeGuest() {
                 placeholder="Create a password"
                 onChange={handleSetPassword}
               />
+              <CSSTransition
+                classNames="liveValidateMessage"
+                in={state.password.hasErrors}
+                timeout={330}
+                unmountOnExit
+              >
+                <div className="alert alert-danger small liveValidateMessage">
+                  {state.password.message}
+                </div>
+              </CSSTransition>
             </div>
             <button
               type="submit"
