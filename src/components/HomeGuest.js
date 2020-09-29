@@ -1,38 +1,108 @@
 import React, { useState } from "react";
 import Axios from "axios";
+import { useImmerReducer } from "use-immer";
+import { CSSTransition } from "react-transition-group";
 
 import Page from "./Page";
 
 function HomeGuest() {
-  const [username, setUsername] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const initialState = {
+    username: {
+      value: "",
+      hasErrors: false,
+      message: "",
+      isUnique: false,
+      checkCount: 0,
+    },
+    email: {
+      value: "",
+      hasErrors: false,
+      message: "",
+      isUnique: false,
+      checkCount: 0,
+    },
+    password: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    submitCount: 0,
+  };
+
+  const formReducer = (draft, action) => {
+    switch (action.type) {
+      case "usernameImmediately":
+        draft.username.hasErrors = false;
+        draft.username.value = action.value;
+        if (draft.username.value.length > 15) {
+          draft.username.hasErrors = true;
+          draft.username.message = "Username can not exceed 15 characters.";
+        }
+        if (
+          draft.username.value &&
+          !/^([a-zA-Z0-9]+)$/.test(draft.username.value)
+        ) {
+          draft.username.hasErrors = true;
+          draft.username.message =
+            "Username can only contain letters and numbers.";
+        }
+        break;
+      case "usernameAfterDelay":
+        break;
+      case "usernameUniqueResults":
+        break;
+      case "emailImmediately":
+        draft.email.hasErrors = false;
+        draft.email.value = action.value;
+        break;
+      case "emailAfterDelay":
+        break;
+      case "emailUniqueResults":
+        break;
+      case "passwordImmediately":
+        draft.password.hasErrors = false;
+        draft.password.value = action.value;
+        break;
+      case "passwordAfterDelay":
+        break;
+      case "submitForm":
+        break;
+      default:
+        break;
+    }
+  };
+
+  const [state, dispatch] = useImmerReducer(formReducer, initialState);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    // try {
+    //   await Axios.post("http://localhost:8080/register", {
+    //     username: username,
+    //     email: email,
+    //     password: password,
+    //   });
+    //   console.log("User was successfully created");
+    // } catch (e) {
+    //   console.log("There was an error", e);
+    // }
+    console.log(state);
+  }
 
   const handleSetUsername = (e) => {
-    setUsername(e.target.value);
+    const value = e.target.value;
+    dispatch({ type: "usernameImmediately", value });
   };
 
   const handleSetEmail = (e) => {
-    setEmail(e.target.value);
+    const value = e.target.value;
+    dispatch({ type: "emailImmediately", value });
   };
 
   const handleSetPassword = (e) => {
-    setPassword(e.target.value);
+    const value = e.target.value;
+    dispatch({ type: "passwordImmediately", value });
   };
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-      await Axios.post("http://localhost:8080/register", {
-        username: username,
-        email: email,
-        password: password,
-      });
-      console.log("User was successfully created");
-    } catch (e) {
-      console.log("There was an error", e);
-    }
-  }
   return (
     <Page wide title="Welcome">
       <div className="row align-items-center">
@@ -60,6 +130,16 @@ function HomeGuest() {
                 autoComplete="off"
                 onChange={handleSetUsername}
               />
+              <CSSTransition
+                classNames="liveValidateMessage"
+                in={state.username.hasErrors}
+                timeout={330}
+                unmountOnExit
+              >
+                <div className="alert alert-danger small liveValidateMessage">
+                  {state.username.message}
+                </div>
+              </CSSTransition>
             </div>
             <div className="form-group">
               <label htmlFor="email-register" className="text-muted mb-1">

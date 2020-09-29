@@ -1,5 +1,3 @@
-38-chat-messages-count
+39-improving-registration-form
 
-- App.js
-- Chat.js
-- HeaderLoggedIn.js
+- HomeGuest.js
