@@ -1,5 +1,3 @@
-36-chat-component-ui
+37-chat-sending-and-receiving
 
 - Chat.js
-- App.js
-- HeaderLoggedIn.js

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useImmer } from "use-immer";
 
 import DispatchContext from "../DispatchContext";
 import StateContext from "../StateContext";
@@ -8,6 +9,11 @@ function Chat() {
   const appDispatch = useContext(DispatchContext);
   const appState = useContext(StateContext);
   const chatField = useRef(null);
+  const initialState = {
+    chatInputValue: "",
+    chatMessages: [],
+  };
+  const [state, setState] = useImmer(initialState);
 
   useEffect(() => {
     if (appState.isChatOpen) {
@@ -17,6 +23,29 @@ function Chat() {
 
   const closeChat = () => {
     appDispatch({ type: "closeChat" });
+  };
+
+  const handleChatInput = (e) => {
+    const value = e.target.value;
+    setState((draft) => {
+      draft.chatInputValue = value;
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Send message to chat server
+
+    setState((draft) => {
+      draft.chatMessages.push({
+        message: state.chatInputValue,
+        username: appState.user.username,
+        avatar: appState.user.avatar,
+      });
+      draft.chatInputValue = "";
+    });
+    console.log(state.chatInputValue);
+    console.log(state.chatMessages);
   };
 
   return (
@@ -34,36 +63,43 @@ function Chat() {
         </span>
       </div>
       <div id="chat" className="chat-log">
-        <div className="chat-self">
-          <div className="chat-message">
-            <div className="chat-message-inner">Hey, how are you?</div>
-          </div>
-          <img
-            alt=""
-            className="chat-avatar avatar-tiny"
-            src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
-          />
-        </div>
-
-        <div className="chat-other">
-          <Link to="#">
-            <img
-              alt=""
-              className="avatar-tiny"
-              src="https://gravatar.com/avatar/b9216295c1e3931655bae6574ac0e4c2?s=128"
-            />
-          </Link>
-          <div className="chat-message">
-            <div className="chat-message-inner">
+        {state.chatMessages.map((message, index) => {
+          if (message.username === appState.user.username) {
+            return (
+              <div key={index} className="chat-self">
+                <div className="chat-message">
+                  <div className="chat-message-inner">{message.message}</div>
+                </div>
+                <img
+                  alt=""
+                  className="chat-avatar avatar-tiny"
+                  src={message.avatar}
+                />
+              </div>
+            );
+          }
+          return (
+            <div className="chat-other">
               <Link to="#">
-                <strong>barksalot:</strong>
+                <img alt="" className="avatar-tiny" src={message.avatar} />
               </Link>
-              Hey, I am good, how about you?
+              <div className="chat-message">
+                <div className="chat-message-inner">
+                  <Link to="#">
+                    <strong>{message.username}:</strong>
+                  </Link>
+                  {message.message}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
-      <form id="chatForm" className="chat-form border-top">
+      <form
+        id="chatForm"
+        className="chat-form border-top"
+        onSubmit={handleSubmit}
+      >
         <input
           type="text"
           className="chat-field"
@@ -71,6 +107,8 @@ function Chat() {
           placeholder="Type a message…"
           autoComplete="off"
           ref={chatField}
+          value={state.chatInputValue}
+          onChange={handleChatInput}
         />
       </form>
     </div>
