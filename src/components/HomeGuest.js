@@ -1,11 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import Axios from "axios";
 import { useImmerReducer } from "use-immer";
 import { CSSTransition } from "react-transition-group";
 
+import DispatchContext from "../DispatchContext";
+
 import Page from "./Page";
 
 function HomeGuest() {
+  const appDispatch = useContext(DispatchContext);
+
   const initialState = {
     username: {
       value: "",
@@ -103,6 +107,15 @@ function HomeGuest() {
 
         break;
       case "submitForm":
+        if (
+          !draft.username.hasErrors &&
+          draft.username.isUnique &&
+          !draft.email.hasErrors &&
+          draft.email.isUnique &&
+          !draft.password.hasErrors
+        ) {
+          draft.submitCount++;
+        }
         break;
       default:
         break;
@@ -193,8 +206,44 @@ function HomeGuest() {
     }
   }, [state.email.checkCount]);
 
+  useEffect(() => {
+    if (state.submitCount) {
+      const cancelRequest = Axios.CancelToken.source();
+      async function fetchResults() {
+        try {
+          const response = await Axios.post(
+            "http://localhost:8080/register",
+            {
+              username: state.username.value,
+              email: state.email.value,
+              password: state.password.value,
+            },
+            { cancelToken: cancelRequest.token }
+          );
+          appDispatch({ type: "login", data: response.data });
+          appDispatch({
+            type: "flashMessage",
+            value: "User was successfully created",
+          });
+          console.log("User was successfully created");
+        } catch (e) {
+          console.log("There was an error", e);
+        }
+      }
+      fetchResults();
+    }
+  }, [state.submitCount]);
+
   function handleSubmit(e) {
     e.preventDefault();
+    dispatch({ type: "usernameImmediately", value: state.username.value });
+    dispatch({ type: "usernameAfterDelay", value: state.username.value });
+    dispatch({ type: "emailImmediately", value: state.email.value });
+    dispatch({ type: "emailAfterDelay", value: state.email.value });
+    dispatch({ type: "passwordImmediately", value: state.password.value });
+    dispatch({ type: "passwordAfterDelay", value: state.password.value });
+    dispatch({ type: "submitForm" });
+
     // try {
     //   await Axios.post("http://localhost:8080/register", {
     //     username: username,
