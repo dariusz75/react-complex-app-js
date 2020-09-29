@@ -1,9 +1,12 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useImmer } from "use-immer";
+import io from "socket.io-client";
 
 import DispatchContext from "../DispatchContext";
 import StateContext from "../StateContext";
+
+const socket = io("http://localhost:8080");
 
 function Chat() {
   const appDispatch = useContext(DispatchContext);
@@ -21,6 +24,14 @@ function Chat() {
     }
   }, [appState.isChatOpen]);
 
+  useEffect(() => {
+    socket.on("chatFromServer", (message) => {
+      setState((draft) => {
+        draft.chatMessages.push(message);
+      });
+    });
+  }, []);
+
   const closeChat = () => {
     appDispatch({ type: "closeChat" });
   };
@@ -35,6 +46,10 @@ function Chat() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Send message to chat server
+    socket.emit("chatFromBrowser", {
+      message: state.chatInputValue,
+      token: appState.user.token,
+    });
 
     setState((draft) => {
       draft.chatMessages.push({
@@ -79,7 +94,7 @@ function Chat() {
             );
           }
           return (
-            <div className="chat-other">
+            <div key={index} className="chat-other">
               <Link to="#">
                 <img alt="" className="avatar-tiny" src={message.avatar} />
               </Link>
