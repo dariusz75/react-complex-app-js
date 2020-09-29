@@ -30,7 +30,7 @@ function CreatePost(props) {
       // Redirect to the new post url
       props.history.push(`/post/${response.data}`);
     } catch (e) {
-      console.log("There was an error");
+      console.log("There was an error", e);
     }
   };
 

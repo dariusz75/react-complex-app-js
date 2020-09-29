@@ -28,9 +28,9 @@ function HomeGuest() {
         email: email,
         password: password,
       });
-      console.log("User was successfuly created");
+      console.log("User was successfully created");
     } catch (e) {
-      console.log("There was an error");
+      console.log("There was an error", e);
     }
   }
   return (

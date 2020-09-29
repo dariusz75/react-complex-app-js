@@ -11,12 +11,10 @@ function HeaderLoggedOut(props) {
 
   const handleSetUsername = (e) => {
     setUsername(e.target.value);
-    console.log(username);
   };
 
   const handleSetPassword = (e) => {
     setPassword(e.target.value);
-    console.log(password);
   };
 
   const handleOnSubmit = async (e) => {
@@ -32,7 +30,7 @@ function HeaderLoggedOut(props) {
         console.log("Incorrect username or password");
       }
     } catch (e) {
-      console.log("There was an error");
+      console.log("There was an error", e);
     }
   };
 

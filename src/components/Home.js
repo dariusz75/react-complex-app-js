@@ -50,11 +50,6 @@ function Home() {
     };
   }, []);
 
-  const handleClose = (e) => {
-    e.preventDefault();
-    appDispatch({ type: "isSearchClose" });
-  };
-
   if (state.isLoading) {
     return <LoadingDotsIcon />;
   }
@@ -88,7 +83,6 @@ function Home() {
                   to={`/post/${result._id}`}
                   className="list-group-item list-group-item-action"
                   key={index}
-                  onClick={handleClose}
                 >
                   <img
                     alt=""
