@@ -26,8 +26,15 @@ function HeaderLoggedOut(props) {
       });
       if (response.data) {
         appDispatch({ type: "login", data: response.data });
+        appDispatch({
+          type: "flashMessage",
+          value: "You have successfully logged in",
+        });
       } else {
-        console.log("Incorrect username or password");
+        appDispatch({
+          type: "flashMessage",
+          value: "Invalid username / password",
+        });
       }
     } catch (e) {
       console.log("There was an error", e);
