@@ -85,12 +85,9 @@ function EditPost() {
     const cancelTokenRequest = Axios.CancelToken.source();
     async function fetchPost() {
       try {
-        const response = await Axios.get(
-          `http://localhost:8080/post/${state.id}`,
-          {
-            cancelToken: cancelTokenRequest.token,
-          }
-        );
+        const response = await Axios.get(`/post/${state.id}`, {
+          cancelToken: cancelTokenRequest.token,
+        });
         if (response.data) {
           dispatch({ type: "fetchComplete", value: response.data });
         } else {
@@ -116,7 +113,7 @@ function EditPost() {
       async function fetchPost() {
         try {
           const response = await Axios.post(
-            `http://localhost:8080/post/${state.id}/edit`,
+            `/post/${state.id}/edit`,
             {
               title: state.title.value,
               body: state.body.value,

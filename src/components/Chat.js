@@ -6,7 +6,9 @@ import io from "socket.io-client";
 import DispatchContext from "../DispatchContext";
 import StateContext from "../StateContext";
 
-const socket = io("http://localhost:8080");
+const socket = io(
+  process.env.BACKENDURL || "https://backend-for-react-post-app.herokuapp.com"
+);
 
 function Chat() {
   const appDispatch = useContext(DispatchContext);

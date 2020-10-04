@@ -166,7 +166,7 @@ function HomeGuest() {
       async function fetchSearchResults() {
         try {
           const response = await Axios.post(
-            "http://localhost:8080/doesUsernameExist",
+            "/doesUsernameExist",
             { username: state.username.value },
             { cancelToken: cancelRequest.token }
           );
@@ -189,7 +189,7 @@ function HomeGuest() {
       async function fetchSearchResults() {
         try {
           const response = await Axios.post(
-            "http://localhost:8080/doesEmailExist",
+            "/doesEmailExist",
             { email: state.email.value },
             { cancelToken: cancelRequest.token }
           );
@@ -212,7 +212,7 @@ function HomeGuest() {
       async function fetchResults() {
         try {
           const response = await Axios.post(
-            "http://localhost:8080/register",
+            "/register",
             {
               username: state.username.value,
               email: state.email.value,
@@ -243,18 +243,6 @@ function HomeGuest() {
     dispatch({ type: "passwordImmediately", value: state.password.value });
     dispatch({ type: "passwordAfterDelay", value: state.password.value });
     dispatch({ type: "submitForm" });
-
-    // try {
-    //   await Axios.post("http://localhost:8080/register", {
-    //     username: username,
-    //     email: email,
-    //     password: password,
-    //   });
-    //   console.log("User was successfully created");
-    // } catch (e) {
-    //   console.log("There was an error", e);
-    // }
-    console.log(state);
   }
 
   const handleSetUsername = (e) => {

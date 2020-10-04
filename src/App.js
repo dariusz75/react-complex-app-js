@@ -3,6 +3,7 @@ import { useImmerReducer } from "use-immer";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import "./App.css";
+import Axios from "axios";
 
 import StateContext from "./StateContext";
 import DispatchContext from "./DispatchContext";
@@ -21,6 +22,8 @@ import EditPost from "./components/EditPost";
 import NotFound from "./components/NotFound";
 import Search from "./components/Search";
 import Chat from "./components/Chat";
+Axios.defaults.baseURL =
+  process.env.BACKENDURL || "https://backend-for-react-post-app.herokuapp.com";
 
 function App() {
   const appToken = localStorage.getItem("appToken");
@@ -91,7 +94,12 @@ function App() {
       localStorage.removeItem("appUsername");
       localStorage.removeItem("appAvatar");
     }
-  }, []);
+  }, [
+    state.loggedIn,
+    state.user.avatar,
+    state.user.token,
+    state.user.username,
+  ]);
 
   return (
     <StateContext.Provider value={state}>

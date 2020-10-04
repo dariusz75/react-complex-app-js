@@ -48,7 +48,7 @@ function Search() {
       async function fetchSearchResults() {
         try {
           const response = await Axios.post(
-            "http://localhost:8080/search",
+            "/search",
             { searchTerm: state.searchTerm },
             { cancelToken: cancelRequest.token }
           );

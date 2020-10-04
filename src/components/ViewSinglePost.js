@@ -24,7 +24,7 @@ function ViewSinglePost(props) {
     const cancelTokenRequest = Axios.CancelToken.source();
     async function fetchPost() {
       try {
-        const response = await Axios.get(`http://localhost:8080/post/${id}`, {
+        const response = await Axios.get(`/post/${id}`, {
           cancelToken: cancelTokenRequest.token,
         });
         console.log("response from ViewSinglePost is: ", response.data);
@@ -59,7 +59,7 @@ function ViewSinglePost(props) {
     if (areYouSure) {
       try {
         const response = await Axios({
-          url: `http://localhost:8080/post/${id}`,
+          url: `/post/${id}`,
           data: {
             token: appState.user.token,
           },

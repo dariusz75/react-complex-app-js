@@ -14,10 +14,9 @@ function ProfileFollowing() {
     const cancelTokenRequest = Axios.CancelToken.source();
     async function fetchData() {
       try {
-        const response = await Axios.get(
-          `http://localhost:8080/profile/${username}/following`,
-          { cancelToken: cancelTokenRequest.token }
-        );
+        const response = await Axios.get(`/profile/${username}/following`, {
+          cancelToken: cancelTokenRequest.token,
+        });
         setPosts(response.data);
         setIsLoading(false);
       } catch (e) {
